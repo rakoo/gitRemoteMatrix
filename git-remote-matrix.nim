@@ -5,7 +5,7 @@ author        = "Matthieu Rakotojaona"
 description   = "A git remote helper for storing content in Matrix"
 license       = "CC0"
 srcDir        = "src"
-bin           = @["matrig"]
+bin           = @["git-remote-matrix"]
 
 
 

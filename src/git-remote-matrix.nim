@@ -1,4 +1,4 @@
-import matrig/git
+import git-remote-matrix/git
 import strutils
 
 proc readLineSafe(s: File): string =
