@@ -5,10 +5,11 @@ author        = "Matthieu Rakotojaona"
 description   = "A git remote helper for storing content in Matrix"
 license       = "CC0"
 srcDir        = "src"
-bin           = @["git-remote-matrix"]
+bin           = @["gitRemoteMatrix"]
 
 
 
 # Dependencies
 
 requires "nim >= 1.2.0"
+requires "docopt >= 0.6.7"

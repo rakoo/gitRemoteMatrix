@@ -1,5 +1,9 @@
-import git-remote-matrix/git
-import strutils
+import strutils, osproc, terminal, asyncdispatch
+import docopt
+
+import gitRemoteMatrix/consts
+import gitRemoteMatrix/git
+import gitRemoteMatrix/matrix
 
 proc readLineSafe(s: File): string =
     try:
@@ -43,7 +47,40 @@ proc push(initialLine: string) =
       break
 
 when isMainModule:
-  while true:
+  let doc = """
+git-remote-matrix
+
+A git remote helper for storing git stuff in a Matrix.org room
+
+Usage:
+  git-remote-matrix --reset-identity <@username:server.tld>
+  git-remote-matrix --version
+
+Options:
+  --version  Version
+  --reset-identity=<@username:server.tld>  Setup with your credentials
+"""
+
+  let args = docopt(doc, version = gitRemoteMatrixVersion)
+  if args["--reset-identity"]:
+    let uid = args["--reset-identity"]
+    if not isValid($uid):
+      stderr.writeLine "Invalid uid"
+      discard
+    let password = readPasswordFromStdin()
+    let (accessToken, _) = execCmdEx("git config --get remote.matrix.acces_token." & $uid)
+    if accessToken != "":
+      echo "accessToken found for " & $uid & ", logging out"
+      waitFor logout($uid, accessToken)
+      echo "logged out"
+    
+    let loggedIn = waitFor login($uid, password)
+    if not loggedIn:
+      echo "Invalid uid or password"
+      quit(QuitFailure)
+
+
+  while false:
     let line = stdin.readLineSafe
 
     if line.startsWith "capabilities":
